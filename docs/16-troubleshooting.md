@@ -64,6 +64,29 @@ rm -rf ~/.local/share/nvim ~/.local/state/nvim   # پاک کردن پلاگین�
 nvim
 ```
 
+## خطای «Query error … Invalid node type» موقع باز کردن فایل؟
+
+متن خطا معمولاً این شکلیه: `Invalid node type "static_member_expression"` (یا هر node دیگری).
+
+**دلیل:** پارسرهای کامپایل‌شدهٔ Treesitter از یک کانفیگ قدیمی‌تر روی دیسک مانده‌اند و با فایل‌های query پلاگین هماهنگ نیستند (معمولاً در `~/.local/share/nvim/site/parser/`).
+
+**راه‌حل:**
+
+```bash
+# پارسرهای قدیمی را کنار بگذارید
+mv ~/.local/share/nvim/site/parser ~/.local/share/nvim/site/parser.old-$(date +%Y%m%d)
+
+# پارسرها را از نو با نسخهٔ درست کامپایل کنید
+nvim --headless "+TSInstallSync! angular python javascript tsx typescript" +qa
+nvim   # بعد باز کردن فایل، دیگر خطا نمی‌بینید
+```
+
+بررسی سریع اینکه همهٔ query ها سالم‌اند (باید `fails=0` چاپ کند):
+
+```bash
+nvim --headless "+lua vim.defer_fn(function() local f=0 for _,l in ipairs({'javascript','typescript','tsx','angular','python','lua'}) do if not pcall(vim.treesitter.query.get,l,'highlights') then f=f+1 print('FAIL '..l) end end print('fails='..f) vim.cmd('qa') end, 4000)"
+```
+
 ## ابزارهای تشخیص
 
 ```vim
