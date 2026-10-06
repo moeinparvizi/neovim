@@ -1,48 +1,69 @@
+-- General Neovim options (behavior shared with every plugin)
+local opt = vim.opt
+
+-- Leader keys (must be set before lazy.nvim boots)
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
-vim.scriptencoding = "utf-8"
-vim.opt.encoding = "utf-8"
-vim.opt.fileencoding = "utf-8"
+-- UI
+opt.number = true
+opt.relativenumber = true
+opt.cursorline = true
+opt.signcolumn = "yes"
+opt.termguicolors = true
+opt.showmode = false -- lualine/bufferline already show it
+opt.pumheight = 14
+opt.laststatus = 3 -- one global statusline
+opt.cmdheight = 1
+opt.scrolloff = 8
+opt.sidescrolloff = 8
+opt.wrap = false
+opt.linebreak = true -- when wrap is on, break at spaces (good for Persian prose)
+opt.breakindent = true
 
-vim.opt.number = true
+-- Editing
+opt.expandtab = true
+opt.shiftwidth = 2
+opt.tabstop = 2
+opt.softtabstop = 2
+opt.smartindent = true
+opt.autoindent = true
+opt.updatetime = 250
+opt.timeoutlen = 400
+opt.ignorecase = true
+opt.smartcase = true
+opt.inccommand = "split" -- live :s preview
+opt.splitbelow = true
+opt.splitright = true
+opt.autoread = true
+opt.mouse = "a" -- enables Ctrl+Click / Alt+Click features
+opt.clipboard = "unnamedplus" -- system clipboard like WebStorm
 
-vim.opt.title = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.hlsearch = true
-vim.opt.backup = false
-vim.opt.showcmd = true
-vim.opt.cmdheight = 1
-vim.opt.laststatus = 2
-vim.opt.expandtab = true
-vim.opt.scrolloff = 10
-vim.opt.shell = "fish"
-vim.opt.backupskip = { "/tmp/*", "/private/tmp/*" }
-vim.opt.inccommand = "split"
-vim.opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in search
-vim.opt.smarttab = true
-vim.opt.breakindent = true
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
-vim.opt.wrap = false -- No Wrap lines
-vim.opt.backspace = { "start", "eol", "indent" }
-vim.opt.path:append({ "**" }) -- Finding files - Search down into subfolders
-vim.opt.wildignore:append({ "*/node_modules/*" })
-vim.opt.splitbelow = true -- Put new windows below current
-vim.opt.splitright = true -- Put new windows right of current
-vim.opt.splitkeep = "cursor"
-vim.opt.mouse = ""
+-- Persistent undo (per-file undo history across restarts)
+opt.undofile = true
+opt.undodir:append(vim.fn.stdpath("state") .. "/undo")
 
--- Undercurl
-vim.cmd([[let &t_Cs = "\e[4:3m"]])
-vim.cmd([[let &t_Ce = "\e[4:0m"]])
+-- Sessions / swap
+opt.swapfile = false
+opt.writebackup = false
 
--- Add asterisks in block comments
-vim.opt.formatoptions:append({ "r" })
+-- Folding (nvim-ufo enhances these)
+opt.foldcolumn = "1"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+opt.foldenable = true
 
-vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
-vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
+-- Persian / RTL-friendly text handling
+-- (nvim joins Arabic-script letters itself; terminals like kitty/iTerm2/WezTerm
+--  render them correctly. Paragraph direction stays LTR — see docs/13-persian.md)
+vim.cmd([[ set delcombine ]])
 
-if vim.fn.has("nvim-0.8") == 1 then
-	vim.opt.cmdheight = 0
-end
+-- Search
+opt.hlsearch = true
+
+-- Don't continue comments with o/O automatically
+opt.formatoptions:remove({ "o" })
+
+-- netrw is replaced by neo-tree
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw = 1

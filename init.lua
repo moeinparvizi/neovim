@@ -1,10 +1,15 @@
-if vim.loader then
-	vim.loader.enable()
-end
+-- Moein's Neovim config — WebStorm-class IDE in the terminal
+-- Repo: https://github.com/moeinparvizi/neovim
+-- Docs: docs/ (فارسی)
 
-_G.dd = function(...)
-	require("util.debug").dump(...)
-end
-vim.print = _G.dd
-
+-- Bootstrap everything
+require("config.options")
 require("config.lazy")
+require("config.keymaps")
+require("config.autocmds")
+
+-- Load persisted colorscheme (see lua/config/theme.lua + <leader>ut)
+require("config.theme").load()
+
+-- Persian keyboard is available as :set keymap=persian — toggle with F9
+-- (file: keymap/persian.vim, found automatically via runtimepath)
